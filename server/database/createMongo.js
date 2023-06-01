@@ -1,5 +1,6 @@
 import db from "./connectionMongodb.js";
 import bcrypt from "bcrypt";
+
 await db.categories.deleteMany()
 db.categories.insertOne({id:1, title:"Nynne"})
 db.categories.insertOne({id:2, title:"Mime"})
@@ -15,4 +16,6 @@ db.cards.insertOne(  {id: 4, categoryId: 2, title:"Kendte danske skuespillere", 
 
 await db.users.deleteMany()
 const encryptedPassword = await bcrypt.hash("test", 12);
-db.users.insertOne({email: "bobsemail@email.dk", username: "bob", password:encryptedPassword})
+db.users.insertOne({email: "bobsemail@email.dk", username: "bob", encryptedPassword:encryptedPassword})
+
+await db.sessions.deleteMany()

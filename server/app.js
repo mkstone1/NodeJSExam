@@ -49,6 +49,21 @@ app.get("/cards", async (req, res) => {
   res.send(await db.cards.find().toArray());
 });
 
+
+app.get("/cards/:id", async (req, res) => {
+  const id = parseInt(req.params.id)
+  let options = { id: id };
+  const categoryId = await db.categories.findOne(options)
+  options = { categoryId: categoryId.id };
+  res.send(await db.cards.find(options).toArray())
+});
+
+app.get("/card/:id", async (req, res) => {
+  const id = parseInt(req.params.id)
+  let options = { id: id };
+  res.send(await db.cards.findOne(options))
+});
+
 app.get("/api/user", async(req,res)=>{
 
     if(req.session.email){
