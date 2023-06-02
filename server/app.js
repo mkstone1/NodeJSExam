@@ -31,7 +31,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: sessionStore,
     cookie: { secure: false },
   })
@@ -52,15 +52,15 @@ app.get("/cards", async (req, res) => {
 
 app.get("/cards/:id", async (req, res) => {
   const id = parseInt(req.params.id)
-  let options = { id: id };
+  let options = { _id: id };
   const categoryId = await db.categories.findOne(options)
-  options = { categoryId: categoryId.id };
+  options = { categoryId: categoryId._id };
   res.send(await db.cards.find(options).toArray())
 });
 
 app.get("/card/:id", async (req, res) => {
   const id = parseInt(req.params.id)
-  let options = { id: id };
+  let options = { _id: id };
   res.send(await db.cards.findOne(options))
 });
 
@@ -77,6 +77,9 @@ app.get("/api/user", async(req,res)=>{
 
 import authRouter from "./routers/authRouter.js";
 app.use(authRouter);
+
+import gameRouter from "./routers/gameRouter.js"
+app.use(gameRouter)
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

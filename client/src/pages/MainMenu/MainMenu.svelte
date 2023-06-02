@@ -5,16 +5,16 @@ import { navigate } from "svelte-navigator";
 
 
 function handleStartGame(){
-    navigate("/categories")
+    navigate("/startGame")
 }
 
 function handleOptions(){
-    navigate("/Options")
+    navigate("/rules")
 }
 
 const tiles = [
     {title:"Start Game", function:handleStartGame},
-    {title:"Options", function:handleOptions}
+    {title:"Rules", function:handleOptions}
 ];
 
 </script>

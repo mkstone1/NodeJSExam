@@ -15,7 +15,7 @@ a {
   text-decoration: inherit;
   margin-right: 1em;
   border: 2px solid Black;
-  border-radius: 10%;
+
   transition: border-color 0.25s;
   padding-left: 15px;
   padding-right: 15px;

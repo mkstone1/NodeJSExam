@@ -13,33 +13,16 @@
   import CreateUser from "./pages/CreateUser/CreateUser.svelte";
   import MainMenu from "./pages/MainMenu/MainMenu.svelte";
   import Card from "./pages/Card/Card.svelte";
+  import StartGame from "./pages/StartGame/StartGame.svelte";
+  import GameCard from "./pages/GameCard/GameCard.svelte";
+  import { isGameStrated } from "./stores/gameStore.js";
+  import GameCatgories from "./pages/GameCategories/GameCatgories.svelte";
+  import GameOver from "./pages/GameOver/GameOver.svelte";
+  import Rules from "./pages/Rules/Rules.svelte";
+ 
  
 
-  let categories = [];
-  let cards = [];
   onMount(async () => {
-
-    getCategories();
-    checkForLogin();
-   
-
-  });
-
-  async function getCategories() {
-    const categoryFetch = await fetch($BASE_URL + "/categories");
-
-    categories = await categoryFetch.json();
-  }
-
-  async function getCards(){
-    const response = await fetch($BASE_URL + "/cards")
-  
-    const cards = await response.json()
-    console.log(cards)
-  }
-
-
-  async function checkForLogin(){
     const response = await fetch($BASE_URL + "/api/user", {
       credentials: "include",
     });
@@ -47,7 +30,8 @@
     if (!(responseData.data.message == "Not Logged in")) {
       username.set(responseData.data[0].username);
     }
-  }
+  });
+
 
 </script>
 
@@ -55,7 +39,8 @@
   <nav class="navbar">
     <div class="right-links">
       <Link to="/">Home</Link>
-      <Link to="/categories">categories</Link>
+      <Link to="/categories">View questions</Link>
+
     </div>
     {#if $username}
       <ProfileDropDown />
@@ -64,52 +49,57 @@
     {/if}
   </nav>
 
-  <Route path="/categories">
-    <Categories />
-  </Route>
-  <Route path="/cards">
-    <Cards />
-  </Route>
-  <Route path="/login">
-    <Login />
-  </Route>
-  <Route path="/forgotpassword">
-    <ForgotPassword />
-  </Route>
-  <Route path="/createUser">
-    <CreateUser />
-  </Route>
   <Route path="/">
     <MainMenu />
   </Route>
 
+  <Route path="/rules">
+  <Rules />
+  </Route>
 
+  <Route path="/categories">
+    <Categories />
+  </Route>
 
+  <Route path="/cards">
+    <Cards />
+  </Route>
+
+  <Route path="/login">
+    <Login />
+  </Route>
+
+  <Route path="/forgotpassword">
+    <ForgotPassword />
+  </Route>
+
+  <Route path="/createUser">
+    <CreateUser />
+  </Route>
+
+  <Route path="/startGame">
+    <StartGame />
+  </Route>
 
   <Route path={`/category/:id`}>
     <Cards />
   </Route>
 
-
-  <!--
-      {#each categories as category (category.id)}
-    <Route path={`/category/${category.title}`}>
-      <Cards />
-    </Route>
-  {/each}
-    
-    
-    {#each cards as card (card.id)}
-    <Route path={`/card/${card.title}`}>
-      <Cards />
-    </Route>
-  {/each} -->
-
   <Route path={`/card/:id`}>
-    <Card />
+    <Card isGameCard="false" roundLength=-1 />
   </Route>
 
+  <Route path={`/gamecard/card/:id`}>
+    <GameCard />
+  </Route>
+
+  <Route path="/game/categories">
+    <GameCatgories/>
+  </Route>
   
+  <Route path="/gameover">
+    <GameOver />
+  </Route>
 
 
 

@@ -10,10 +10,7 @@ const router = Router();
 router.post("/auth/login", async (req, res) => {
     const data = req.body.data;
     const options = {email: data.email}
-    const user = await db.users.findOne(options )
-
-    console.log(user)
-  
+    const user = await db.users.findOne(options) 
   
     if (user) {
 
@@ -22,12 +19,11 @@ router.post("/auth/login", async (req, res) => {
       if (isSame) {
         req.session.username = data.username;
         req.session.email = data.email;
-        req.session.isLoggedIn = true;
         if (user.role) {
           req.session.role = user.role;
-          res.send({data: [{message:"success"},{role:user.role},{data:user.username}]});
+          res.send({data: [{message:"success"},{role:user.role}]});
         } else {
-          res.send({data: [{message:"success"},{data:user.username}]});
+          res.send({data: [{message:"success"}]});
         }
       }
     }
@@ -73,7 +69,7 @@ router.post("/auth/createUser", async (req, res) => {
 
 router.get("/auth/forgotPassword/:email", (req, res) =>{
   console.log(req.params.email)
-  //sendEmail();
+  sendEmail();
   res.send({})
 })
 

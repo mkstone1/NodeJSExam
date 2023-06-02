@@ -12,5 +12,6 @@ export default {
     cards: db.collection("cards"),
     categories: db.collection("categories"),
     users: db.collection("users"),
-    sessions: db.collection("sessions")
+    sessions: db.collection("sessions"),
+    games: db.collection("games")
 };
