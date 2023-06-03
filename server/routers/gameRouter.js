@@ -151,7 +151,9 @@ router.post("/updateScore", async (req, res) => {
 
 
   const totalRoundsPlayed = gameInfo.teamScores.reduce((total, team) => total + team.roundsPlayed, 1);
-  if(totalRoundsPlayed == gameInfo.amountOfTeams * gameInfo.currentRound){
+  console.log(totalRoundsPlayed)
+  console.log(gameInfo.amountOfTeams * gameInfo.numberOfRounds)
+  if(totalRoundsPlayed == gameInfo.amountOfTeams * gameInfo.numberOfRounds){
     res.send({data:"false"})
   }
   else{

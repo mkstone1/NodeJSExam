@@ -40,7 +40,7 @@
   {#if isFinal === "true" && winner !== "tied"}
     <h1>The winner is {winner}</h1>
     <h1>The final score is</h1>
-    {:else if winner ==="tied"}
+    {:else if isFinal === "true" && winner ==="tied"}
     <h1>The game is tied</h1>
 
   {:else}
