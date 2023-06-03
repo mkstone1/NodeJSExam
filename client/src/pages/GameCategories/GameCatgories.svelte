@@ -4,9 +4,14 @@
   import { BASE_URL } from "../../stores/globalStore.js";
   import Categories from "../Categories/Categories.svelte";
   import TeamScore from "../../components/TeamScore/TeamScore.svelte";
+  import { io } from "socket.io-client";
+  import { navigate } from "svelte-navigator";
 
   let currentTeam = "";
   let currentRound = "";
+
+  const socket = io($BASE_URL);
+
   onMount(async () => {
     const gameId = localStorage.getItem("gameId");
     const response = await fetch(
@@ -19,7 +24,15 @@
     const roundsResponse = await fetch($BASE_URL + "/getRemaningRounds" + "?gameid=" + gameId )
     const currentRoundsData = await roundsResponse.json()
     currentRound = currentRoundsData.data.currentRound
+    socket.emit("hasRoundStarted", { gameId: gameId})
   });
+
+  socket.on("RoundHasStarted",(data)=>{
+   
+    if(data.cardId){
+    navigate(`/gamecard/card/${data.cardId}/true`)
+  }
+  })
 </script>
 
 <div class="game-categories">

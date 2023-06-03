@@ -1,20 +1,25 @@
 <script>
-  import { navigate } from "svelte-navigator";
+
   import TileSelection from "../../components/TileSelection/TileSelection.svelte";
   import { BASE_URL } from "../../stores/globalStore.js";
-  import { isGameStrated } from "../../stores/gameStore.js";
+  import { io } from "socket.io-client";
+  import { username } from "../../stores/userStore.js";
+  
+  
+  const socket = io($BASE_URL);
 
 
   let roundLength = 30;
   let numberOfRounds = 1;
   let amountOfTeams = 2;
+  let isMultiDevice = "False";
 
 
 
 
   async function handleStartGame() {
     const gameInfo = {
-      data: { roundLength: roundLength, numberOfRounds: numberOfRounds, amountOfTeams: amountOfTeams },
+      data: { roundLength: roundLength, numberOfRounds: numberOfRounds, amountOfTeams: amountOfTeams, isMultiDevice },
     };
 
     const gameInit = 
@@ -28,10 +33,16 @@
     })
 
     const result = await gameInit.json()
-    console.log(result)
-    localStorage.setItem("gameId", result.data.gameid)
-    isGameStrated.set(true)
-    navigate("/game/categories");
+    localStorage.setItem("gameId",result.data[0].gameid)
+
+    if(result.data[1].isMultiDevice === "True"){
+      
+      window.location.href = "/gameMultiDeviceSetup"}
+
+    
+    else{
+      window.location.href = "/game/categories";
+    }
   }
 
   const tiles = [{ title: "Start Game", function: handleStartGame }];
@@ -57,6 +68,10 @@
     setSelection={val => amountOfTeams = val}
     title="Amount of teams" />
 
+    <TileSelection options={["False","True"]}
+    stringSelection={isMultiDevice}
+    setSelection={val => isMultiDevice = val}
+    title="Use multiple devices" />
 
 
 

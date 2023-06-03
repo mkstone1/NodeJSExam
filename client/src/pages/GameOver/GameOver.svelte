@@ -6,17 +6,23 @@
 
   const gameId = localStorage.getItem("gameId");
 
-  onMount(async()=>{
-    const reponse = await fetch($BASE_URL +  "/endRound" + "?gameid=" + gameId,{
-    method: "POST"})
-    localStorage.clear();
-  })
 
   function handleStartNewGame(){
-    navigate("/startGame")
+    localStorage.clear();
+    endGame();
+    window.location.href = "/startGame";
 
   }
+  function handleExitGame (){
+    localStorage.clear();
+    endGame();
+    window.location.href = "/";
+  }
 
+  async function endGame(){
+    const reponse = await fetch($BASE_URL +  "/endRound" + "?gameid=" + gameId,{
+    method: "POST"})
+  }
 
 </script>
 
@@ -29,6 +35,7 @@
     <TeamScore isFinal="true"/>
 
     <button on:click={handleStartNewGame}>Start new game</button>
+    <button on:click={handleExitGame}>Exit Game</button>
 
 
 </div>

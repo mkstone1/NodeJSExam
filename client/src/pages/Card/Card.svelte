@@ -5,6 +5,7 @@
 
   let params = useParams();
   let id = $params.id;
+
   let card = {};
   let answers = [];
   let checkedAnswers = [];
@@ -46,7 +47,6 @@
 
           const keepPlaying = await response.json()
 
-          console.log(keepPlaying.data)
 
           if(keepPlaying.data === "true"){
             navigate("/game/categories")

@@ -9,6 +9,7 @@ router.post("/initGame", async (req, res) => {
   const amountOfTeams = data.amountOfTeams;
 
   let teamScores = [];
+  let players = [];
 
   for (let i = 1; i <= amountOfTeams; i++) {
     teamScores.push({
@@ -23,8 +24,20 @@ router.post("/initGame", async (req, res) => {
   let currentTeam = keys[0];
   data.currentTeam = currentTeam;
 
+  if(req.session.email){
+    const user = await db.users.findOne({email: req.session.email})
+    players.push({username: user.username})
+  }
+  else{
+    players.push({username: "John Doe"})
+  }
+
+  
+  data.players = players
+  
+
   const result = await db.games.insertOne(data);
-  res.send({ data: { gameid: result.insertedId } });
+  res.send({ data: [{ gameid: result.insertedId }, {isMultiDevice: data.isMultiDevice} ]});
 });
 
 router.get("/getRoundLength", async (req, res) => {
@@ -51,7 +64,6 @@ router.get("/getScore", async (req, res) => {
 
 router.post("/endRound", async (req, res) => {
   const gameid = req.query.gameid;
-  console.log(gameid)
   const deleteGame = await db.games.deleteOne({_id: new ObjectId(gameid)})
 });
 
@@ -139,7 +151,6 @@ router.post("/updateScore", async (req, res) => {
 
 
   const totalRoundsPlayed = gameInfo.teamScores.reduce((total, team) => total + team.roundsPlayed, 1);
-  console.log(totalRoundsPlayed)
   if(totalRoundsPlayed == gameInfo.amountOfTeams * gameInfo.currentRound){
     res.send({data:"false"})
   }
@@ -159,9 +170,18 @@ router.get("/getRemaningRounds", async(req, res) =>{
 })
 
 
+router.get("/getPlayersInGame" , async(req, res) =>{
+  const gameid = req.query.gameid;
+  const gameInfo = await db.games.findOne({ _id: new ObjectId(gameid) });
+  res.send({data:{players: gameInfo.players}})
+})
 
 
-
+router.get("/isMultiDevice", async (req, res) =>{
+  const gameid = req.query.gameid;
+  const gameInfo = await db.games.findOne({ _id: new ObjectId(gameid) });
+  res.send({data:{isMultiDevice: gameInfo.isMultiDevice}})
+})
 
 
 export default router;

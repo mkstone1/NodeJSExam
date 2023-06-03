@@ -17,14 +17,8 @@ router.post("/auth/login", async (req, res) => {
       const isSame = await bcrypt.compare(data.password, user.encryptedPassword);
 
       if (isSame) {
-        req.session.username = data.username;
         req.session.email = data.email;
-        if (user.role) {
-          req.session.role = user.role;
-          res.send({data: [{message:"success"},{role:user.role}]});
-        } else {
-          res.send({data: [{message:"success"}]});
-        }
+        res.send({data: [{message:"success"}]});
       }
     }
     else{
@@ -33,11 +27,7 @@ router.post("/auth/login", async (req, res) => {
 
 
   router.post("/auth/logout",(req,res) =>{
-    sessionStore.destroy(req.session.id, (err) => {
-        if(err) {
-            console.log(err);
-            return res.sendStatus(500);
-        }
+    sessionStore.destroy(req.session.id, () => {
         res.clearCookie("session");
         res.sendStatus(200);
     });
@@ -60,7 +50,7 @@ router.post("/auth/createUser", async (req, res) => {
       const { password, ...rest } = data;
       const encryptedPassword = await bcrypt.hash(password, 12);
       const userData = { ...rest, encryptedPassword };
-      console.log(userData);
+  
       const updateDB = db.users.insertOne(userData);
       res.send({ data: { message: "success" } });
     }
@@ -68,12 +58,20 @@ router.post("/auth/createUser", async (req, res) => {
 });
 
 router.get("/auth/forgotPassword/:email", (req, res) =>{
-  console.log(req.params.email)
   sendEmail();
   res.send({})
 })
 
 
+router.get("/user", async(req, res) =>{
+  if(req.session.email){
+    const user = await db.users.findOne({email:req.session.email})
+    res.send({ data: [{ username: user.username }, {email: user.email}]});
+  }
+  else{
+    res.send({data:{message: "Not logged in"}})
+  }
+})
 
 
 

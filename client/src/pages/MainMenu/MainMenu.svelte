@@ -12,9 +12,15 @@ function handleOptions(){
     navigate("/rules")
 }
 
+function handleJoinGame(){
+    navigate("/joingame")
+}
+
+
 const tiles = [
     {title:"Start Game", function:handleStartGame},
-    {title:"Rules", function:handleOptions}
+    {title:"Rules", function:handleOptions},
+    {title:"Join Game" , function:handleJoinGame}
 ];
 
 </script>

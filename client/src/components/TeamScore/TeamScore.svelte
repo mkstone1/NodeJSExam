@@ -3,7 +3,8 @@
   import { BASE_URL } from "../../stores/globalStore.js";
 
   let teamScores = [];
-  let winner = {};
+  let highestScore = [];
+  let winner = "";
 
   export let isFinal = "";
 
@@ -12,21 +13,36 @@
     const response = await fetch($BASE_URL + "/getScore" + "?gameid=" + gameId);
     const scoreData = await response.json();
     teamScores = scoreData.data.teamScores;
-    winner = teamScores.reduce((highest, team) => {
-      if (!highest || team.score > highest.score) {
-        return team.name;
-      } else {
-        return highest;
-      }
-    }, null);
+    highestScore = teamScores.reduce(
+      (prev, current) => {
+        if (current.score > prev[0].score) {
+          return [current];
+        } else if (current.score === prev[0].score) {
+          return [...prev, current];
+        } else {
+          return prev;
+        }
+      },
+      [teamScores[0]]
+    );
   
+    if(highestScore.length ===1){
+      winner = highestScore[0].name
+    }
+    else{
+      winner = "tied"
+    }
+    
   });
 </script>
 
 <div>
-  {#if isFinal === "true"}
+  {#if isFinal === "true" && winner !== "tied"}
     <h1>The winner is {winner}</h1>
     <h1>The final score is</h1>
+    {:else if winner ==="tied"}
+    <h1>The game is tied</h1>
+
   {:else}
     <h1>The current score is</h1>
   {/if}

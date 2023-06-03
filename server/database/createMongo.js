@@ -17,6 +17,6 @@ db.cards.insertOne(  {_id: 4, categoryId: 2, title:"Kendte danske skuespillere",
 await db.users.deleteMany()
 const encryptedPassword = await bcrypt.hash("test", 12);
 db.users.insertOne({email: "bobsemail@email.dk", username: "bob", encryptedPassword:encryptedPassword})
-
+db.users.insertOne({email: "alice@email.dk", username: "alice", encryptedPassword:encryptedPassword})
 await db.sessions.deleteMany();
 await db.games.deleteMany();

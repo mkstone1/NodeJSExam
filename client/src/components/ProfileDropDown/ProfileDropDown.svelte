@@ -17,6 +17,7 @@
     });
     toastr.error("You are now logged out")
     window.location.href = "/";
+    username.set("")
   }
 
   
@@ -27,8 +28,8 @@
   <p>{$username} ↓</p>
   {#if showDropDown}
     <div class="drop-down-links">
-      <a class="links" href="/">link 1</a>
-      <a class="links" href="/">link 1</a>
+      <a class="links" href="/myprofile">My Profile</a>
+
       <button class="links" on:click={handleLogout}>Logout</button>
     </div>
   {/if}

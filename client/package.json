@@ -11,9 +11,12 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
     "svelte": "^3.57.0",
+    "svelte-loading-spinners": "^0.3.4",
     "vite": "^4.3.0"
   },
   "dependencies": {
+    "socket.io": "^4.6.2",
+    "socket.io-client": "^4.6.2",
     "svelte-navigator": "^3.2.2",
     "toastr": "^2.1.4"
   }

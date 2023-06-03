@@ -5,7 +5,6 @@
   import Cards from "./pages/Cards/Cards.svelte";
   import Login from "./pages/Login/Login.svelte";
   import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.svelte";
-  import { isLoggedIn, isAdmin } from "./stores/authStore.js";
   import ProfileDropDown from "./components/ProfileDropDown/ProfileDropDown.svelte";
   import { username } from "./stores/userStore.js";
   import { BASE_URL } from "./stores/globalStore.js";
@@ -15,24 +14,39 @@
   import Card from "./pages/Card/Card.svelte";
   import StartGame from "./pages/StartGame/StartGame.svelte";
   import GameCard from "./pages/GameCard/GameCard.svelte";
-  import { isGameStrated } from "./stores/gameStore.js";
   import GameCatgories from "./pages/GameCategories/GameCatgories.svelte";
   import GameOver from "./pages/GameOver/GameOver.svelte";
   import Rules from "./pages/Rules/Rules.svelte";
- 
- 
+  import GameMultiDeviceSetup from "./pages/GameMultiDeviceSetup/GameMultiDeviceSetup.svelte";
+  import JoinGame from "./pages/JoinGame/JoinGame.svelte";
+  import MyProfile from "./pages/MyProfile/MyProfile.svelte";
+  import { Shadow } from "svelte-loading-spinners";
+
+  const gameId = localStorage.getItem("gameId");
+  let isLoading = true;
 
   onMount(async () => {
-    const response = await fetch($BASE_URL + "/api/user", {
-      credentials: "include",
-    });
-    const responseData = await response.json();
-    if (!(responseData.data.message == "Not Logged in")) {
-      username.set(responseData.data[0].username);
+ 
+    try {
+        const response = await fetch($BASE_URL+ "/api/user", {
+        credentials: "include",
+      });
+      const responseData = await response.json();
+
+      if (!(responseData.data.message == "Not Logged in")) {
+        username.set(responseData.data.username);
+      }
+    } catch (error) {
+      username.set(null);
     }
+     isLoading = false;
+  
   });
 
-
+  function handleExitGame() {
+    localStorage.clear();
+    window.location.href = "/";
+  }
 </script>
 
 <Router>
@@ -40,7 +54,9 @@
     <div class="right-links">
       <Link to="/">Home</Link>
       <Link to="/categories">View questions</Link>
-
+      {#if gameId}
+        <button on:click={handleExitGame}>Exit game</button>
+      {/if}
     </div>
     {#if $username}
       <ProfileDropDown />
@@ -53,8 +69,19 @@
     <MainMenu />
   </Route>
 
+  <Route path="/myprofile">
+    {#if isLoading}
+      <div class="spinner">
+        <Shadow />
+      </div>
+    {:else if $username}
+      <MyProfile />
+    {:else}
+      <Login />
+    {/if}
+  </Route>
   <Route path="/rules">
-  <Rules />
+    <Rules />
   </Route>
 
   <Route path="/categories">
@@ -86,23 +113,32 @@
   </Route>
 
   <Route path={`/card/:id`}>
-    <Card isGameCard="false" roundLength=-1 />
+    <Card isGameCard="false" roundLength="-1" />
   </Route>
 
   <Route path={`/gamecard/card/:id`}>
     <GameCard />
   </Route>
 
-  <Route path="/game/categories">
-    <GameCatgories/>
+  <Route path={`/gamecard/card/:id/:hasStarted`}>
+    <GameCard />
   </Route>
-  
+
+  <Route path="/game/categories">
+    <GameCatgories />
+  </Route>
+
   <Route path="/gameover">
     <GameOver />
   </Route>
 
+  <Route path="/gameMultiDeviceSetup">
+    <GameMultiDeviceSetup />
+  </Route>
 
-
+  <Route path="/joingame">
+    <JoinGame />
+  </Route>
 </Router>
 
 <style>
@@ -115,9 +151,12 @@
     height: 5vh;
     padding-top: 2vh;
     padding-bottom: 2vh;
-    
   }
   .right-links {
     display: flex;
+  }
+
+  .spinner {
+    margin-top: 10vh;
   }
 </style>

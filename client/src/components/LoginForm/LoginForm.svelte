@@ -25,7 +25,7 @@
   
     async function handleSubmit() {
       const failedLogin = await onSubmit(email, password, confirmPassword, confirmEmail, username);
-      console.log(failedLogin)
+     
       isFailedLogin = failedLogin;
       email = "";
       password = "";
