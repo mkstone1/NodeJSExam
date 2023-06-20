@@ -16,7 +16,7 @@ function sendEmail() {
     from: "markmellem@gmail.com",
     to: "markstone1234@hotmail.com",
     subject: "Testing nodemailer",
-    text: "THIS IS A AWESOME EMAIL",
+    text: "THIS IS A AWESOME EMAIL ",
   };
 
   console.log(details)

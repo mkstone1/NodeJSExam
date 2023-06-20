@@ -20,7 +20,7 @@
   }
 
   async function endGame(){
-    const reponse = await fetch($BASE_URL +  "/endRound" + "?gameid=" + gameId,{
+    const reponse = await fetch($BASE_URL +  "/endGame" + "?gameid=" + gameId,{
     method: "POST"})
   }
 

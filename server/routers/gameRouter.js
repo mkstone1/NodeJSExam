@@ -42,6 +42,7 @@ router.post("/initGame", async (req, res) => {
 
 router.get("/getRoundLength", async (req, res) => {
   const gameid = req.query.gameid;
+  console.log(gameid)
   const gameInfo = await db.games.findOne({ _id: new ObjectId(gameid) });
 
   res.send({ data: { roundLength: gameInfo.roundLength } });
@@ -62,9 +63,10 @@ router.get("/getScore", async (req, res) => {
   res.send({ data: { teamScores: gameInfo.teamScores } });
 });
 
-router.post("/endRound", async (req, res) => {
+router.post("/endGame", async (req, res) => {
   const gameid = req.query.gameid;
   const deleteGame = await db.games.deleteOne({_id: new ObjectId(gameid)})
+  res.send({})
 });
 
 router.post("/updateScore", async (req, res) => {

@@ -19,7 +19,7 @@
 
   async function handleStartGame() {
     const gameInfo = {
-      data: { roundLength: roundLength, numberOfRounds: numberOfRounds, amountOfTeams: amountOfTeams, isMultiDevice },
+      data: { roundLength: roundLength, numberOfRounds: numberOfRounds, amountOfTeams: amountOfTeams, isMultiDevice }
     };
 
     const gameInit = 
@@ -53,7 +53,7 @@
   <div class="tiles">
 
 
-    <TileSelection options={[1,5, 30, 45, 60]}
+    <TileSelection options={[1, 5, 30, 45, 60]}
     selection={roundLength}
     setSelection={val => roundLength = val}
     title="Round Length" />

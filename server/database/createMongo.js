@@ -18,5 +18,6 @@ await db.users.deleteMany()
 const encryptedPassword = await bcrypt.hash("test", 12);
 db.users.insertOne({email: "bobsemail@email.dk", username: "bob", encryptedPassword:encryptedPassword})
 db.users.insertOne({email: "alice@email.dk", username: "alice", encryptedPassword:encryptedPassword})
+db.users.insertOne({email: "s@s", username: "test", encryptedPassword:encryptedPassword})
 await db.sessions.deleteMany();
 await db.games.deleteMany();

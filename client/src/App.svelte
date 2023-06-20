@@ -1,6 +1,6 @@
 <script>
   // @ts-ignore
-  import { Router, Link, Route } from "svelte-navigator";
+  import { Router, Link, Route, navigate } from "svelte-navigator";
   import Categories from "./pages/Categories/Categories.svelte";
   import Cards from "./pages/Cards/Cards.svelte";
   import Login from "./pages/Login/Login.svelte";
@@ -21,34 +21,39 @@
   import JoinGame from "./pages/JoinGame/JoinGame.svelte";
   import MyProfile from "./pages/MyProfile/MyProfile.svelte";
   import { Shadow } from "svelte-loading-spinners";
+  import { writable } from "svelte/store";
 
   const gameId = localStorage.getItem("gameId");
   let isLoading = true;
 
+
   onMount(async () => {
- 
+    let isLoading = true;
     try {
-        const response = await fetch($BASE_URL+ "/api/user", {
+      const response = await fetch($BASE_URL + "/api/user", {
         credentials: "include",
       });
       const responseData = await response.json();
 
       if (!(responseData.data.message == "Not Logged in")) {
         username.set(responseData.data.username);
+      } else {
+        username.set(null);
       }
     } catch (error) {
       username.set(null);
     }
-     isLoading = false;
-  
+    isLoading = false;
+    console.log(isLoading);
   });
 
-  function handleExitGame() {
+
+
+  async function handleExitGame() {
     localStorage.clear();
     window.location.href = "/";
   }
 </script>
-
 <Router>
   <nav class="navbar">
     <div class="right-links">
@@ -70,15 +75,12 @@
   </Route>
 
   <Route path="/myprofile">
-    {#if isLoading}
-      <div class="spinner">
-        <Shadow />
-      </div>
-    {:else if $username}
+    {#if $username}
       <MyProfile />
     {:else}
       <Login />
     {/if}
+
   </Route>
   <Route path="/rules">
     <Rules />

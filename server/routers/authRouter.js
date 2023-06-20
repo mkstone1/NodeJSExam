@@ -8,9 +8,12 @@ const router = Router();
 
 
 router.post("/auth/login", async (req, res) => {
+  console.log("hit")
+  console.log(req.body.data)
     const data = req.body.data;
     const options = {email: data.email}
     const user = await db.users.findOne(options) 
+    console.log(user)
   
     if (user) {
 
